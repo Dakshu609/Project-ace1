@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Send, Search } from "lucide-react";
+import { ArrowLeft, Send, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/shared/page-header";
 import { cn } from "@/lib/utils";
 import {
   conversations,
@@ -15,14 +16,29 @@ import {
 export default function MessagesPage() {
   const [activeId, setActiveId] = useState(conversations[0]?.id ?? "");
   const [message, setMessage] = useState("");
+  const [showThread, setShowThread] = useState(false);
   const activeMessages = getMessagesByConversationId(activeId);
   const activeConversation = conversations.find((c) => c.id === activeId);
 
+  const handleSelectConversation = (id: string) => {
+    setActiveId(id);
+    setShowThread(true);
+  };
+
+  const handleBackToList = () => {
+    setShowThread(false);
+  };
+
   return (
-    <div className="container mx-auto flex h-[calc(100vh-8rem)] flex-col px-4 py-4 lg:px-8">
-      <h1 className="mb-4 text-2xl font-bold">Messages</h1>
+    <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col page-padding">
+      <PageHeader title="Messages" className="mb-4" />
       <Card className="flex flex-1 overflow-hidden">
-        <aside className="hidden w-80 shrink-0 border-r md:block">
+        <aside
+          className={cn(
+            "w-full shrink-0 border-r md:block md:w-80",
+            showThread ? "hidden md:block" : "block"
+          )}
+        >
           <div className="border-b p-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -34,7 +50,7 @@ export default function MessagesPage() {
               <button
                 key={conv.id}
                 type="button"
-                onClick={() => setActiveId(conv.id)}
+                onClick={() => handleSelectConversation(conv.id)}
                 className={cn(
                   "flex w-full gap-3 border-b p-4 text-left transition-colors hover:bg-muted/50",
                   activeId === conv.id && "bg-muted"
@@ -50,12 +66,12 @@ export default function MessagesPage() {
                     />
                   </div>
                   {conv.online && (
-                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
+                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-success" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium truncate">{conv.participantName}</span>
+                    <span className="truncate font-medium">{conv.participantName}</span>
                     {conv.unread > 0 && (
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                         {conv.unread}
@@ -71,10 +87,24 @@ export default function MessagesPage() {
           </div>
         </aside>
 
-        <div className="flex flex-1 flex-col">
+        <div
+          className={cn(
+            "flex flex-1 flex-col",
+            showThread ? "flex" : "hidden md:flex"
+          )}
+        >
           {activeConversation ? (
             <>
               <div className="flex items-center gap-3 border-b p-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  onClick={handleBackToList}
+                  aria-label="Back to conversations"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
                 <div className="relative h-10 w-10 overflow-hidden rounded-full">
                   <Image
                     src={activeConversation.participantAvatar}

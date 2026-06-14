@@ -76,7 +76,7 @@ export function Footer() {
             <p className="mb-3 text-sm text-muted-foreground">
               Get hiring tips and top freelancer picks.
             </p>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Input placeholder="Email address" type="email" className="flex-1" />
               <Button size="sm">Join</Button>
             </div>

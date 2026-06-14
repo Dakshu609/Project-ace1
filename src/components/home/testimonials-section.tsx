@@ -9,7 +9,7 @@ import { testimonials } from "@/lib/data/mock";
 
 export function TestimonialsSection() {
   return (
-    <section className="bg-muted/30 py-20">
+    <section className="section-padding bg-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeader
           badge="Testimonials"
@@ -25,7 +25,7 @@ export function TestimonialsSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="h-full">
+              <Card className="interactive-lift h-full hover:border-primary/20">
                 <CardContent className="p-6">
                   <StarRating rating={t.rating} />
                   <p className="mt-4 text-muted-foreground">&ldquo;{t.content}&rdquo;</p>

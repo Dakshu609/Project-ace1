@@ -9,7 +9,7 @@ import { faqs } from "@/lib/data/mock";
 
 export function FAQSection() {
   return (
-    <section className="bg-muted/30 py-20">
+    <section className="section-padding bg-muted/30">
       <div className="container mx-auto max-w-3xl px-4 lg:px-8">
         <SectionHeader
           badge="FAQ"

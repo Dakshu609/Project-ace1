@@ -9,7 +9,7 @@ export function TopFreelancersSection() {
   const topFreelancers = freelancers.slice(0, 4);
 
   return (
-    <section className="py-20">
+    <section className="section-padding">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col items-end justify-between gap-4 sm:flex-row">
           <SectionHeader

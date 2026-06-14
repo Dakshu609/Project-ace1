@@ -11,14 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { FreelancerCard } from "@/components/freelancers/freelancer-card";
 import { FilterSidebar } from "@/components/freelancers/filter-sidebar";
+import { PageHeader } from "@/components/shared/page-header";
 import { freelancers } from "@/lib/data/mock";
 
 export default function FreelancersPage() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("rating");
-  const [showFilters, setShowFilters] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {
     let result = [...freelancers];
@@ -52,13 +60,11 @@ export default function FreelancersPage() {
   }, [search, sort]);
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Browse Freelancers</h1>
-        <p className="mt-2 text-muted-foreground">
-          {filtered.length} verified developers ready to hire
-        </p>
-      </div>
+    <div className="container mx-auto page-padding">
+      <PageHeader
+        title="Browse Freelancers"
+        description={`${filtered.length} verified developers ready to hire`}
+      />
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
@@ -81,18 +87,26 @@ export default function FreelancersPage() {
             <SelectItem value="jobs">Most Jobs</SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          variant="outline"
-          className="lg:hidden"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <SlidersHorizontal className="mr-2 h-4 w-4" />
-          Filters
-        </Button>
+        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="lg:hidden">
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              Filters
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-80 overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Filters</SheetTitle>
+            </SheetHeader>
+            <div className="mt-6">
+              <FilterSidebar />
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <div className="flex gap-8">
-        <div className={`w-72 shrink-0 ${showFilters ? "block" : "hidden"} lg:block`}>
+        <div className="hidden w-72 shrink-0 lg:block">
           <FilterSidebar />
         </div>
         <div className="flex-1">

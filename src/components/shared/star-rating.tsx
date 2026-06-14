@@ -10,7 +10,7 @@ interface StarRatingProps {
 export function StarRating({ rating, className, showValue = true }: StarRatingProps) {
   return (
     <div className={cn("flex items-center gap-1", className)}>
-      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+      <Star className="h-4 w-4 fill-warning text-warning" />
       {showValue && (
         <span className="text-sm font-medium">{rating.toFixed(1)}</span>
       )}

@@ -32,7 +32,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 export function CategoriesSection() {
   return (
-    <section className="bg-muted/30 py-20">
+    <section className="section-padding bg-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeader
           badge="Categories"
@@ -51,7 +51,7 @@ export function CategoriesSection() {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link href={`/freelancers?category=${encodeURIComponent(cat.name)}`}>
-                  <Card className="group cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
+                  <Card className="interactive-lift group cursor-pointer hover:border-primary/20">
                     <CardContent className="flex items-center gap-4 p-5">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                         <Icon className="h-6 w-6" />

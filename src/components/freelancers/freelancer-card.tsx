@@ -29,7 +29,7 @@ export function FreelancerCard({ freelancer, index = 0 }: FreelancerCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Card className="group overflow-hidden transition-all hover:border-primary/30 hover:shadow-lg">
+      <Card className="interactive-lift group overflow-hidden hover:border-primary/20">
         <CardContent className="p-6">
           <div className="flex gap-4">
             <Link href={`/freelancers/${freelancer.id}`}>
@@ -48,7 +48,7 @@ export function FreelancerCard({ freelancer, index = 0 }: FreelancerCardProps) {
                 <div>
                   <Link
                     href={`/freelancers/${freelancer.id}`}
-                    className="font-semibold hover:text-primary"
+                    className="font-semibold transition-colors hover:text-primary"
                   >
                     {freelancer.name}
                   </Link>

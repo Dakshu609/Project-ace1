@@ -34,7 +34,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20">
+    <section className="section-padding">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeader
           badge="Why Project Ace"
@@ -50,7 +50,7 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="h-full border-transparent bg-muted/30 transition-all hover:border-primary/20 hover:shadow-lg">
+              <Card className="interactive-lift h-full border-transparent bg-muted/30 hover:border-primary/20">
                 <CardContent className="p-6">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <feature.icon className="h-6 w-6" />

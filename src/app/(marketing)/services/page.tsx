@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StarRating } from "@/components/shared/star-rating";
+import { PageHeader } from "@/components/shared/page-header";
 import { formatCurrency } from "@/lib/utils";
 import { services, categories } from "@/lib/data/mock";
 import {
@@ -35,13 +36,11 @@ export default function ServicesPage() {
   }, [search, category]);
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Browse Services</h1>
-        <p className="mt-2 text-muted-foreground">
-          Ready-made packages from top freelancers
-        </p>
-      </div>
+    <div className="container mx-auto page-padding">
+      <PageHeader
+        title="Browse Services"
+        description="Ready-made packages from top freelancers"
+      />
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
@@ -70,7 +69,10 @@ export default function ServicesPage() {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((service) => (
-          <Card key={service.id} className="overflow-hidden transition-all hover:shadow-lg">
+          <Card
+            key={service.id}
+            className="interactive-lift overflow-hidden hover:border-primary/20"
+          >
             <div className="relative h-44">
               <Image src={service.image} alt={service.title} fill className="object-cover" />
             </div>
@@ -78,8 +80,8 @@ export default function ServicesPage() {
               <Badge variant="secondary" className="mb-2">
                 {service.category}
               </Badge>
-              <h3 className="font-semibold line-clamp-2">{service.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+              <h3 className="line-clamp-2 font-semibold">{service.title}</h3>
+              <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                 {service.description}
               </p>
               <div className="mt-3 flex items-center gap-2">
@@ -93,7 +95,7 @@ export default function ServicesPage() {
                 </div>
                 <Link
                   href={`/freelancers/${service.freelancerId}`}
-                  className="text-sm hover:text-primary"
+                  className="text-sm transition-colors hover:text-primary"
                 >
                   {service.freelancerName}
                 </Link>

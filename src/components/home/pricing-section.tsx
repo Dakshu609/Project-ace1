@@ -12,7 +12,7 @@ import { pricingPlans } from "@/lib/data/mock";
 
 export function PricingSection() {
   return (
-    <section className="py-20">
+    <section className="section-padding">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeader
           badge="Pricing"
@@ -29,7 +29,7 @@ export function PricingSection() {
               transition={{ delay: i * 0.1 }}
             >
               <Card
-                className={`relative h-full ${
+                className={`interactive-lift relative h-full hover:border-primary/20 ${
                   plan.popular
                     ? "border-primary shadow-lg ring-1 ring-primary"
                     : ""

@@ -18,7 +18,7 @@ const statusVariant = {
 
 export function RecentProjectsSection() {
   return (
-    <section className="bg-muted/30 py-20">
+    <section className="section-padding bg-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col items-end justify-between gap-4 sm:flex-row">
           <SectionHeader
@@ -44,7 +44,7 @@ export function RecentProjectsSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="transition-all hover:shadow-md">
+              <Card className="interactive-lift hover:border-primary/20">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div>

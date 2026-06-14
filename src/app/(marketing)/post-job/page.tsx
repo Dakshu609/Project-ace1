@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/shared/page-header";
 import {
   Select,
   SelectContent,
@@ -26,10 +27,10 @@ export default function PostJobPage() {
 
   if (submitted) {
     return (
-      <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4 py-16">
+      <div className="container mx-auto flex min-h-[60vh] items-center justify-center page-padding">
         <Card className="max-w-md text-center">
           <CardContent className="p-8">
-            <CheckCircle className="mx-auto h-16 w-16 text-emerald-500" />
+            <CheckCircle className="mx-auto h-16 w-16 text-success" />
             <h2 className="mt-4 text-2xl font-bold">Job Posted!</h2>
             <p className="mt-2 text-muted-foreground">
               Your project is live. Freelancers will start sending proposals soon.
@@ -44,13 +45,11 @@ export default function PostJobPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-8 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Post a Job</h1>
-        <p className="mt-2 text-muted-foreground">
-          Describe your project and receive proposals from top freelancers
-        </p>
-      </div>
+    <div className="container mx-auto max-w-2xl page-padding">
+      <PageHeader
+        title="Post a Job"
+        description="Describe your project and receive proposals from top freelancers"
+      />
 
       <Card>
         <CardHeader>

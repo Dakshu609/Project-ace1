@@ -14,7 +14,7 @@ import { categories } from "@/lib/data/mock";
 
 export function SearchSection() {
   return (
-    <section className="container mx-auto -mt-8 px-4 lg:px-8">
+    <section className="relative z-10 container mx-auto -mt-8 px-4 lg:px-8">
       <div className="rounded-2xl border bg-card p-6 shadow-xl">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
           <div className="relative lg:col-span-2">

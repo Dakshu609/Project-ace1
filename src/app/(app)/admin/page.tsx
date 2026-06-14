@@ -9,6 +9,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatCard } from "@/components/dashboard/stat-card";
+import { PageHeader } from "@/components/shared/page-header";
 import { formatCurrency } from "@/lib/utils";
 import { freelancers, projects, users } from "@/lib/data/mock";
 
@@ -29,33 +31,32 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:px-8">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="mb-2 flex items-center gap-2">
+    <div className="container mx-auto max-w-6xl page-padding">
+      <PageHeader
+        title={
+          <span className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          </div>
-          <p className="text-muted-foreground">Platform overview and management</p>
-        </div>
-        <Badge variant="secondary">Super Admin</Badge>
-      </div>
+            Admin Dashboard
+          </span>
+        }
+        description="Platform overview and management"
+        actions={<Badge variant="secondary">Super Admin</Badge>}
+      />
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="page-header-gap grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <stat.icon className="h-8 w-8 text-muted-foreground" />
-                <span className="flex items-center gap-1 text-xs text-emerald-600">
-                  <TrendingUp className="h-3 w-3" />
-                  {stat.change}
-                </span>
-              </div>
-              <p className="mt-4 text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
-            </CardContent>
-          </Card>
+          <StatCard
+            key={stat.label}
+            label={stat.label}
+            value={stat.value}
+            icon={stat.icon}
+            trend={
+              <span className="flex items-center gap-1 text-xs text-success">
+                <TrendingUp className="h-3 w-3" />
+                {stat.change}
+              </span>
+            }
+          />
         ))}
       </div>
 
@@ -91,13 +92,13 @@ export default function AdminDashboardPage() {
             {freelancers.slice(0, 4).map((f) => (
               <div
                 key={f.id}
-                className="flex items-center justify-between rounded-lg border p-3"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3"
               >
                 <div>
                   <p className="font-medium">{f.name}</p>
                   <p className="text-sm text-muted-foreground">{f.title}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button size="sm" variant="outline">
                     Reject
                   </Button>

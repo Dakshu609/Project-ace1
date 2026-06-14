@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   return (
-    <section className="hero-gradient relative overflow-hidden border-b">
-      <div className="container mx-auto px-4 py-20 lg:px-8 lg:py-28">
+    <section className="hero-gradient relative overflow-hidden">
+      <div className="container mx-auto section-padding px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

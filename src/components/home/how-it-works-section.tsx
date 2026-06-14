@@ -45,7 +45,7 @@ function StepsList({ steps }: { steps: typeof clientSteps }) {
 
 export function HowItWorksSection() {
   return (
-    <section className="py-20">
+    <section className="section-padding">
       <div className="container mx-auto px-4 lg:px-8">
         <SectionHeader
           badge="How it works"
