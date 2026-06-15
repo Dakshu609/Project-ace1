@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Zap } from "lucide-react";
-import { RoleForm } from "@/components/auth/role-form";
+import { RoleForm } from "@/client/components/auth/role-form";
 
 export default function AuthRolePage() {
   return (

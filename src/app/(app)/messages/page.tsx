@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, Send, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { PageHeader } from "@/components/shared/page-header";
-import { cn } from "@/lib/utils";
+import { Input } from "@/client/components/ui/input";
+import { Button } from "@/client/components/ui/button";
+import { Card } from "@/client/components/ui/card";
+import { PageHeader } from "@/client/components/shared/page-header";
+import { cn } from "@/shared/utils";
 import {
   conversations,
   getMessagesByConversationId,

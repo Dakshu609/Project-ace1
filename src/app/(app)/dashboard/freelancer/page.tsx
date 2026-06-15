@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
-import { DashboardSection } from "@/components/dashboard/dashboard-section";
-import { StatCard } from "@/components/dashboard/stat-card";
-import { PageHeader } from "@/components/shared/page-header";
-import { getProfile } from "@/lib/auth/actions";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/client/components/ui/card";
+import { Badge } from "@/client/components/ui/badge";
+import { Button } from "@/client/components/ui/button";
+import { Progress } from "@/client/components/ui/progress";
+import { Switch } from "@/client/components/ui/switch";
+import { Label } from "@/client/components/ui/label";
+import { DashboardLayout } from "@/client/components/dashboard/dashboard-layout";
+import { DashboardSection } from "@/client/components/dashboard/dashboard-section";
+import { StatCard } from "@/client/components/dashboard/stat-card";
+import { PageHeader } from "@/client/components/shared/page-header";
+import { getProfile } from "@/server/auth/actions";
+import { formatCurrency, formatDate } from "@/shared/utils";
 import { proposals, freelancers } from "@/lib/data/mock";
 
 const sidebarLinks = [

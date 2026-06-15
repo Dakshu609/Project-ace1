@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Zap } from "lucide-react";
-import { AuthForm } from "@/components/auth/auth-form";
+import { AuthForm } from "@/client/components/auth/auth-form";
 
 export default function AuthPage() {
   return (

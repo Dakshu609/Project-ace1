@@ -6,12 +6,12 @@ import {
   TrendingUp,
   Shield,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { StatCard } from "@/components/dashboard/stat-card";
-import { PageHeader } from "@/components/shared/page-header";
-import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/client/components/ui/card";
+import { Badge } from "@/client/components/ui/badge";
+import { Button } from "@/client/components/ui/button";
+import { StatCard } from "@/client/components/dashboard/stat-card";
+import { PageHeader } from "@/client/components/shared/page-header";
+import { formatCurrency } from "@/shared/utils";
 import { freelancers, projects, users } from "@/lib/data/mock";
 
 export default function AdminDashboardPage() {

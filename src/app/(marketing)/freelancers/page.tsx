@@ -1,127 +1,97 @@
-"use client";
+import { Search, Users } from "lucide-react";
+import { Input } from "@/client/components/ui/input";
+import { Button } from "@/client/components/ui/button";
+import { FreelancerCard } from "@/client/components/freelancers/freelancer-card";
+import { FilterSidebar } from "@/client/components/freelancers/filter-sidebar";
+import { PageHeader } from "@/client/components/shared/page-header";
+import { EmptyState } from "@/client/components/shared/empty-state";
+import { getCategories, getFreelancers } from "@/server/marketplace/queries";
 
-import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { FreelancerCard } from "@/components/freelancers/freelancer-card";
-import { FilterSidebar } from "@/components/freelancers/filter-sidebar";
-import { PageHeader } from "@/components/shared/page-header";
-import { freelancers } from "@/lib/data/mock";
+interface PageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
 
-export default function FreelancersPage() {
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("rating");
-  const [filtersOpen, setFiltersOpen] = useState(false);
+function asArray(value: string | string[] | undefined) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
 
-  const filtered = useMemo(() => {
-    let result = [...freelancers];
+function asString(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
 
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (f) =>
-          f.name.toLowerCase().includes(q) ||
-          f.title.toLowerCase().includes(q) ||
-          f.skills.some((s) => s.toLowerCase().includes(q))
-      );
-    }
+export default async function FreelancersPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const search = asString(params.search) ?? "";
+  const sort = asString(params.sort) ?? "rating";
+  const category = asString(params.category) ?? "";
+  const skills = asArray(params.skill);
+  const availability = asArray(params.availability);
+  const rating = asString(params.rating) ?? "";
 
-    switch (sort) {
-      case "rating":
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      case "price-low":
-        result.sort((a, b) => a.hourlyRate - b.hourlyRate);
-        break;
-      case "price-high":
-        result.sort((a, b) => b.hourlyRate - a.hourlyRate);
-        break;
-      case "jobs":
-        result.sort((a, b) => b.completedJobs - a.completedJobs);
-        break;
-    }
-
-    return result;
-  }, [search, sort]);
+  const [categories, freelancers] = await Promise.all([
+    getCategories(),
+    getFreelancers({
+      search,
+      sort,
+      category,
+      skills,
+      availability,
+      minRating: rating ? Number(rating) : undefined,
+    }),
+  ]);
 
   return (
     <div className="container mx-auto page-padding">
       <PageHeader
         title="Browse Freelancers"
-        description={`${filtered.length} verified developers ready to hire`}
+        description={`${freelancers.length} verified developers ready to hire`}
       />
 
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row">
+      <form className="mb-6 flex flex-col gap-4 sm:flex-row" action="/freelancers">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
+            name="search"
             placeholder="Search by name, skill, or title..."
             className="pl-9"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            defaultValue={search}
           />
         </div>
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="rating">Highest Rated</SelectItem>
-            <SelectItem value="price-low">Price: Low to High</SelectItem>
-            <SelectItem value="price-high">Price: High to Low</SelectItem>
-            <SelectItem value="jobs">Most Jobs</SelectItem>
-          </SelectContent>
-        </Select>
-        <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" className="lg:hidden">
-              <SlidersHorizontal className="mr-2 h-4 w-4" />
-              Filters
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-80 overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Filters</SheetTitle>
-            </SheetHeader>
-            <div className="mt-6">
-              <FilterSidebar />
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
+        <select
+          name="sort"
+          defaultValue={sort}
+          className="h-10 rounded-lg border border-input bg-background px-3 text-sm sm:w-[200px]"
+        >
+          <option value="rating">Highest Rated</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="jobs">Most Jobs</option>
+        </select>
+        <Button type="submit">Search</Button>
+      </form>
 
-      <div className="flex gap-8">
-        <div className="hidden w-72 shrink-0 lg:block">
-          <FilterSidebar />
+      <div className="flex flex-col gap-8 lg:flex-row">
+        <div className="lg:w-72 lg:shrink-0">
+          <FilterSidebar
+            categories={categories}
+            selectedSkills={skills}
+            selectedAvailability={availability}
+            selectedCategory={category}
+            minRating={rating}
+          />
         </div>
         <div className="flex-1">
-          {filtered.length === 0 ? (
-            <p className="py-16 text-center text-muted-foreground">
-              No freelancers match your search. Try different keywords.
-            </p>
+          {freelancers.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title="No freelancers found"
+              description="No verified freelancer profiles match this search yet."
+            />
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
-              {filtered.map((freelancer, i) => (
-                <FreelancerCard
-                  key={freelancer.id}
-                  freelancer={freelancer}
-                  index={i}
-                />
+              {freelancers.map((freelancer, i) => (
+                <FreelancerCard key={freelancer.id} freelancer={freelancer} index={i} />
               ))}
             </div>
           )}

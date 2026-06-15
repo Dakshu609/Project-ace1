@@ -8,12 +8,12 @@ import {
   MessageCircle,
   Globe,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { StarRating } from "@/components/shared/star-rating";
-import { formatCurrency } from "@/lib/utils";
+import { Button } from "@/client/components/ui/button";
+import { Badge } from "@/client/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/client/components/ui/card";
+import { Separator } from "@/client/components/ui/separator";
+import { StarRating } from "@/client/components/shared/star-rating";
+import { formatCurrency } from "@/shared/utils";
 import {
   getFreelancerById,
   getReviewsByFreelancerId,

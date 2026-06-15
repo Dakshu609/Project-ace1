@@ -13,7 +13,7 @@ import type {
   Service,
   Testimonial,
   User,
-} from "@/lib/types";
+} from "@/shared/types";
 
 export const categories = [
   "Web Development",

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
-import { dashboardPathForRole } from "@/lib/auth/utils";
-import type { UserRole } from "@/lib/types";
+import { createClient } from "@/database/supabase/server";
+import { dashboardPathForRole } from "@/server/auth/utils";
+import type { UserRole } from "@/shared/types";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
