@@ -208,10 +208,10 @@ npm install
 
 ### 6. Configure environment variables
 
-Copy `.env.example` to `.env.local`:
+Copy `.env.example` to `.env`:
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 Fill in your credentials:
