@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogOut, LayoutDashboard, User } from "lucide-react";
-import { createClient } from "@/database/supabase/client";
+import { createClient } from "@/lib/supabase";
 import { signOut } from "@/server/auth/actions";
 import { dashboardPathForRole } from "@/server/auth/utils";
 import { Button } from "@/client/components/ui/button";
-import type { Profile } from "@/database/supabase/database.types";
+import type { Profile } from "@/shared/types/database";
 import type { UserRole } from "@/shared/types";
 
 export function UserNav() {

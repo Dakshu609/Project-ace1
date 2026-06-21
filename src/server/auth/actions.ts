@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/database/supabase/server";
+import { createClient } from "@/server/lib/supabase";
+import { now } from "@/shared/utils";
 
 export async function signOut() {
   const supabase = await createClient();
@@ -23,7 +24,7 @@ export async function updateUserRole(role: "client" | "freelancer") {
 
   const { error } = await supabase
     .from("profiles")
-    .update({ role, updated_at: new Date().toISOString() })
+    .update({ role, updated_at: now() })
     .eq("id", user.id);
 
   if (error) {

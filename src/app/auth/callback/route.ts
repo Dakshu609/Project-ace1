@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "@/database/supabase/server";
+import { createClient } from "@/server/lib/supabase";
+import { now } from "@/shared/utils";
 import { dashboardPathForRole } from "@/server/auth/utils";
 import type { UserRole } from "@/shared/types";
 
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
         if (pendingRole && !profile?.role) {
           await supabase
             .from("profiles")
-            .update({ role: pendingRole, updated_at: new Date().toISOString() })
+            .update({ role: pendingRole, updated_at: now() })
             .eq("id", user.id);
 
           await supabase.auth.updateUser({ data: { role: pendingRole } });

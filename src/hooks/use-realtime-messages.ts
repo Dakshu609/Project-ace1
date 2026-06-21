@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/client/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
-export interface Message {
+export interface MessageRow {
   id: string;
   conversation_id: string;
   sender_id: string;
@@ -16,7 +16,7 @@ export interface Message {
 }
 
 export function useRealtimeMessages(conversationId: string | null) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageRow[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -26,6 +26,7 @@ export function useRealtimeMessages(conversationId: string | null) {
       setLoading(false);
       return;
     }
+    const cid: string = conversationId;
 
     let channel: RealtimeChannel;
 
@@ -34,7 +35,7 @@ export function useRealtimeMessages(conversationId: string | null) {
       const { data } = await supabase
         .from("messages")
         .select("*")
-        .eq("conversation_id", conversationId)
+        .eq("conversation_id", cid)
         .order("created_at", { ascending: true });
 
       setMessages(data || []);
@@ -45,17 +46,17 @@ export function useRealtimeMessages(conversationId: string | null) {
 
     // Subscribe to new messages
     channel = supabase
-      .channel(`messages:${conversationId}`)
+      .channel(`messages:${cid}`)
       .on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "public",
           table: "messages",
-          filter: `conversation_id=eq.${conversationId}`,
+          filter: `conversation_id=eq.${cid}`,
         },
         (payload) => {
-          setMessages((current) => [...current, payload.new as Message]);
+          setMessages((current) => [...current, payload.new as MessageRow]);
         }
       )
       .subscribe();

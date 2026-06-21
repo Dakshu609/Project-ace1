@@ -1,4 +1,11 @@
-import { createClient } from "@/database/supabase/server";
+import { db } from "@/server/lib/supabase";
+import { cache } from "react";
+import {
+  formatCompactCurrency,
+  profileName,
+  toNumber,
+  toStringArray,
+} from "@/shared/utils";
 import type {
   Contract,
   Conversation,
@@ -27,11 +34,13 @@ export interface FreelancerFilters {
   skills?: string[];
   availability?: string[];
   minRating?: number;
+  page?: number;
 }
 
 export interface ServiceFilters {
   search?: string;
   category?: string;
+  page?: number;
 }
 
 export interface PlatformCounters {
@@ -76,28 +85,6 @@ function dbError(scope: string, error: unknown) {
   if (error) console.error(`[marketplace:${scope}]`, error);
 }
 
-async function db() {
-  return (await createClient()) as any;
-}
-
-function toStringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
-}
-
-function toNumber(value: unknown, fallback = 0) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : fallback;
-}
-
-function profileName(row: any) {
-  return row?.display_name || row?.full_name || row?.email?.split("@")[0] || "Project Ace user";
-}
-
-export function formatCompactCurrency(amount: number) {
-  if (amount >= 1000) return `$${(amount / 1000).toFixed(amount >= 10000 ? 0 : 1)}k`;
-  return `$${amount.toLocaleString()}`;
-}
-
 export async function getCurrentProfile() {
   const supabase = await db();
   const {
@@ -116,7 +103,7 @@ export async function getCurrentProfile() {
   return { user, profile };
 }
 
-export async function getCategories(): Promise<string[]> {
+export const getCategories = cache(async (): Promise<string[]> => {
   const supabase = await db();
   const { data, error } = await supabase
     .from("categories")
@@ -125,9 +112,9 @@ export async function getCategories(): Promise<string[]> {
 
   dbError("categories", error);
   return (data ?? []).map((row: any) => row.name).filter(Boolean);
-}
+});
 
-export async function getCategoryStats(limit = 9): Promise<CategoryStat[]> {
+export const getCategoryStats = cache(async (limit = 9): Promise<CategoryStat[]> => {
   const supabase = await db();
   const { data, error } = await supabase
     .from("marketplace_category_stats")
@@ -141,7 +128,31 @@ export async function getCategoryStats(limit = 9): Promise<CategoryStat[]> {
     icon: row.icon ?? "Code2",
     count: toNumber(row.freelancer_count),
   }));
-}
+});
+
+export const getPlatformCounters = cache(async (): Promise<PlatformCounters> => {
+  const supabase = await db();
+  const { data } = await supabase.from("platform_counters").select("*").single();
+  return {
+    totalUsers: toNumber(data?.total_users),
+    activeProjects: toNumber(data?.active_projects),
+    revenueMonth: toNumber(data?.revenue_month),
+    openDisputes: toNumber(data?.open_disputes),
+    verifiedFreelancers: toNumber(data?.verified_freelancers),
+  };
+});
+
+export const getFeaturedFreelancers = cache(async (limit = 6) => {
+  const supabase = await db();
+  const { data } = await supabase
+    .from("freelancer_profiles")
+    .select("*, portfolio_items(*)")
+    .eq("verification_status", "verified")
+    .gte("rating", 4.7)
+    .order("review_count", { ascending: false })
+    .limit(limit);
+  return (data ?? []).map(mapFreelancer);
+});
 
 function mapFreelancer(row: any): FreelancerProfile {
   return {
@@ -204,14 +215,9 @@ export async function getFreelancers(filters: FreelancerFilters = {}): Promise<F
       query = query.order("rating", { ascending: false });
   }
 
-  const { data, error } = await query.limit(50);
+  const { data, error } = await query.limit(50).range((filters.page ?? 0) * 50, ((filters.page ?? 0) + 1) * 50 - 1);
   dbError("freelancers", error);
   return (data ?? []).map(mapFreelancer);
-}
-
-export async function getFeaturedFreelancers(limit = 4) {
-  const freelancers = await getFreelancers({ sort: "rating" });
-  return freelancers.slice(0, limit);
 }
 
 export async function getFreelancerById(id: string): Promise<FreelancerProfile | null> {
@@ -283,7 +289,8 @@ export async function getServices(filters: ServiceFilters = {}): Promise<Service
   }
   if (filters.category && filters.category !== "all") query = query.eq("category_name", filters.category);
 
-  const { data, error } = await query.order("created_at", { ascending: false }).limit(60);
+  const page = filters.page ?? 0;
+  const { data, error } = await query.order("created_at", { ascending: false }).limit(60).range(page * 60, (page + 1) * 60 - 1);
   dbError("services", error);
   return (data ?? []).map(mapService);
 }
@@ -319,18 +326,18 @@ function mapJobPost(row: any): JobPost {
   };
 }
 
-export async function getRecentProjects(limit = 4): Promise<Project[]> {
+export const getRecentProjects = cache(async (limit = 6): Promise<Project[]> => {
   const supabase = await db();
   const { data, error } = await supabase
     .from("job_posts")
     .select("*")
-    .neq("status", "draft")
+    .in("status", ["open", "active"])
     .order("created_at", { ascending: false })
     .limit(limit);
 
   dbError("recent-projects", error);
   return (data ?? []).map(mapProject);
-}
+});
 
 function mapContract(row: any): Contract {
   return {

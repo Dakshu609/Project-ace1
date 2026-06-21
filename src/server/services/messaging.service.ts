@@ -4,6 +4,10 @@ import { createClient } from "@/server/lib/supabase";
 import { sendNewMessageNotification } from "./email.service";
 import { revalidatePath } from "next/cache";
 
+function db() {
+  return createClient() as Promise<any>;
+}
+
 export interface SendMessageParams {
   conversationId: string;
   body: string;
@@ -18,7 +22,7 @@ export interface CreateConversationParams {
  */
 export async function sendMessage(params: SendMessageParams) {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -108,7 +112,7 @@ export async function createOrGetConversation(
   params: CreateConversationParams
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -169,7 +173,7 @@ export async function createOrGetConversation(
  */
 export async function markMessagesAsRead(conversationId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -204,7 +208,7 @@ export async function markMessagesAsRead(conversationId: string) {
  * Get conversation messages with real-time support
  */
 export async function getConversationMessages(conversationId: string) {
-  const supabase = await createClient();
+  const supabase = await db();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -226,7 +230,7 @@ export async function getConversationMessages(conversationId: string) {
  * Get user conversations
  */
 export async function getUserConversations() {
-  const supabase = await createClient();
+  const supabase = await db();
   const {
     data: { user },
   } = await supabase.auth.getUser();

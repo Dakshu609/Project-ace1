@@ -13,7 +13,7 @@ import {
   getFeaturedFreelancers,
   getPlatformCounters,
   getRecentProjects,
-} from "@/server/services/marketplace.service";
+} from "@/server/marketplace/queries";
 
 export default async function HomePage() {
   const [categories, categoryStats, featuredFreelancers, recentProjects, counters] =

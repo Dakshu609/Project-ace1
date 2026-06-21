@@ -3,6 +3,10 @@
 import { createClient } from "@/server/lib/supabase";
 import { revalidatePath } from "next/cache";
 
+function db() {
+  return createClient() as Promise<any>;
+}
+
 const AVATAR_BUCKET = "avatars";
 const PORTFOLIO_BUCKET = "portfolio";
 const SERVICE_IMAGES_BUCKET = "service-images";
@@ -19,7 +23,7 @@ export interface UploadResult {
  */
 export async function uploadAvatar(formData: FormData): Promise<UploadResult> {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -86,7 +90,7 @@ export async function uploadPortfolioImage(
   formData: FormData
 ): Promise<UploadResult> {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -140,7 +144,7 @@ export async function uploadServiceImage(
   formData: FormData
 ): Promise<UploadResult> {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -192,7 +196,7 @@ export async function uploadServiceImage(
  */
 export async function deleteFile(bucket: string, path: string) {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
     if (error) {

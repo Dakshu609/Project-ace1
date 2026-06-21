@@ -8,15 +8,11 @@ import { Button } from "@/client/components/ui/button";
 import { StarRating } from "@/client/components/shared/star-rating";
 import { PageHeader } from "@/client/components/shared/page-header";
 import { EmptyState } from "@/client/components/shared/empty-state";
-import { formatCurrency } from "@/shared/utils";
+import { formatCurrency, asString } from "@/shared/utils";
 import { getCategories, getServices } from "@/server/marketplace/queries";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function asString(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
 }
 
 export default async function ServicesPage({ searchParams }: PageProps) {

@@ -5,15 +5,12 @@ import { Label } from "@/client/components/ui/label";
 import { Textarea } from "@/client/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/client/components/ui/card";
 import { PageHeader } from "@/client/components/shared/page-header";
+import { asString } from "@/shared/utils";
 import { createJobPost } from "@/server/marketplace/actions";
 import { getCategories } from "@/server/marketplace/queries";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function asString(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
 }
 
 export default async function PostJobPage({ searchParams }: PageProps) {

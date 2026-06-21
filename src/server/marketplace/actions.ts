@@ -1,8 +1,10 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/database/supabase/server";
+import { createClient } from "@/server/lib/supabase";
+import { now } from "@/shared/utils";
 import { dashboardPathForRole, safeInternalPath } from "@/server/auth/utils";
 import type { UserRole } from "@/shared/types";
 
@@ -18,6 +20,28 @@ function requiredText(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
 }
+
+const jobPostSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  category: z.string().min(1, "Category is required"),
+  budgetAmount: z.number().positive("Budget must be a positive number").finite(),
+  budgetType: z.enum(["fixed", "hourly"]).default("fixed"),
+  deadline: z.string().optional(),
+  skills: z.array(z.string()).optional(),
+});
+
+const messageSchema = z.object({
+  conversationId: z.string().min(1, "Conversation ID is required"),
+  body: z.string().min(1, "Message cannot be empty").max(5000),
+});
+
+const availabilitySchema = z.enum(["available", "busy", "away"]);
+
+const verificationSchema = z.object({
+  freelancerId: z.string().min(1),
+  status: z.enum(["verified", "rejected", "pending"]),
+});
 
 async function currentUser() {
   const supabase = (await createClient()) as any;
@@ -51,7 +75,8 @@ export async function createJobPost(formData: FormData) {
   const deadline = requiredText(formData, "deadline") || null;
   const skills = parseSkills(formData.get("skills"));
 
-  if (!title || !description || !category || !Number.isFinite(budgetAmount)) {
+  const parsed = jobPostSchema.safeParse({ title, description, category, budgetAmount, budgetType, deadline: deadline ?? undefined, skills });
+  if (!parsed.success) {
     redirect("/post-job?error=invalid_job");
   }
 
@@ -86,7 +111,8 @@ export async function sendMessage(formData: FormData) {
   const conversationId = requiredText(formData, "conversationId");
   const body = requiredText(formData, "message");
 
-  if (!conversationId || !body) return { error: "Message cannot be empty." };
+  const parsed = messageSchema.safeParse({ conversationId, body });
+  if (!parsed.success) return { error: "Message cannot be empty." };
 
   const senderName = profile?.full_name || user.email?.split("@")[0] || "User";
   const { error } = await supabase.from("messages").insert({
@@ -106,7 +132,7 @@ export async function sendMessage(formData: FormData) {
     .from("conversations")
     .update({
       last_message: body,
-      updated_at: new Date().toISOString(),
+      updated_at: now(),
     })
     .eq("id", conversationId);
 
@@ -119,13 +145,12 @@ export async function updateAvailability(formData: FormData) {
   if (!user) redirect("/auth?redirect=/dashboard/freelancer");
 
   const availability = requiredText(formData, "availability");
-  if (!["available", "busy", "away"].includes(availability)) {
-    return { error: "Invalid availability." };
-  }
+  const availParsed = availabilitySchema.safeParse(availability);
+  if (!availParsed.success) return { error: "Invalid availability." };
 
   const { error } = await supabase
     .from("freelancer_profiles")
-    .update({ availability, updated_at: new Date().toISOString() })
+    .update({ availability, updated_at: now() })
     .eq("profile_id", user.id);
 
   if (error) {
@@ -149,13 +174,12 @@ export async function updateFreelancerVerification(formData: FormData) {
   const freelancerId = requiredText(formData, "freelancerId");
   const status = requiredText(formData, "status");
 
-  if (!freelancerId || !["verified", "rejected", "pending"].includes(status)) {
-    return { error: "Invalid verification request." };
-  }
+  const verParsed = verificationSchema.safeParse({ freelancerId, status });
+  if (!verParsed.success) return { error: "Invalid verification request." };
 
   const { error } = await supabase
     .from("freelancer_profiles")
-    .update({ verification_status: status, updated_at: new Date().toISOString() })
+    .update({ verification_status: status, updated_at: now() })
     .eq("id", freelancerId);
 
   if (error) {

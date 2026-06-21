@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/client/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
-export interface Conversation {
+export interface ConversationRow {
   id: string;
   client_id: string;
   freelancer_user_id: string;
@@ -17,7 +17,7 @@ export interface Conversation {
 }
 
 export function useRealtimeConversations(userId: string | null) {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversations, setConversations] = useState<ConversationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -27,6 +27,7 @@ export function useRealtimeConversations(userId: string | null) {
       setLoading(false);
       return;
     }
+    const uid: string = userId;
 
     let channel: RealtimeChannel;
 
@@ -35,7 +36,7 @@ export function useRealtimeConversations(userId: string | null) {
       const { data } = await supabase
         .from("conversations")
         .select("*")
-        .or(`client_id.eq.${userId},freelancer_user_id.eq.${userId}`)
+        .or(`client_id.eq.${uid},freelancer_user_id.eq.${uid}`)
         .order("updated_at", { ascending: false });
 
       setConversations(data || []);
@@ -46,7 +47,7 @@ export function useRealtimeConversations(userId: string | null) {
 
     // Subscribe to conversation updates
     channel = supabase
-      .channel(`conversations:${userId}`)
+      .channel(`conversations:${uid}`)
       .on(
         "postgres_changes",
         {
@@ -57,14 +58,14 @@ export function useRealtimeConversations(userId: string | null) {
         (payload) => {
           if (payload.eventType === "INSERT") {
             setConversations((current) => [
-              payload.new as Conversation,
+              payload.new as ConversationRow,
               ...current,
             ]);
           } else if (payload.eventType === "UPDATE") {
             setConversations((current) =>
               current.map((conv) =>
                 conv.id === payload.new.id
-                  ? (payload.new as Conversation)
+                  ? (payload.new as ConversationRow)
                   : conv
               )
             );

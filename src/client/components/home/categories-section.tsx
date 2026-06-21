@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/client/components/ui/card";
 import { SectionHeader } from "@/client/components/shared/section-header";
+import type { CategoryStat } from "@/server/marketplace/queries";
 
 const iconMap: Record<string, LucideIcon> = {
   Globe,
@@ -28,12 +29,6 @@ const iconMap: Record<string, LucideIcon> = {
   Layers,
   FileCode,
 };
-
-interface CategoryStat {
-  name: string;
-  icon: string;
-  count: number;
-}
 
 export function CategoriesSection({ categories }: { categories: CategoryStat[] }) {
   return (

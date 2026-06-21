@@ -1,11 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { cache } from "react";
+import type { Database } from "@/shared/types/database";
 
 export const createClient = cache(async () => {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -48,4 +49,8 @@ export async function getUserProfile() {
     .single();
 
   return profile;
+}
+
+export async function db() {
+  return (await createClient()) as any;
 }

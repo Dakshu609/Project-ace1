@@ -1,8 +1,12 @@
 "use server";
 
-import { stripe, STRIPE_CONFIG } from "@/server/config/stripe";
+import { getStripe, STRIPE_CONFIG } from "@/server/config/stripe";
 import { createClient } from "@/server/lib/supabase";
 import { revalidatePath } from "next/cache";
+
+function db() {
+  return createClient() as Promise<any>;
+}
 
 export interface CreatePaymentIntentParams {
   contractId: string;
@@ -24,7 +28,7 @@ export async function createPaymentIntent(
   params: CreatePaymentIntentParams
 ): Promise<CreatePaymentIntentResult> {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -50,7 +54,7 @@ export async function createPaymentIntent(
     const totalAmount = params.amount + clientFee;
 
     // Create Stripe Payment Intent
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount: Math.round(totalAmount * 100), // Convert to cents
       currency: STRIPE_CONFIG.currency,
       metadata: {
@@ -103,7 +107,7 @@ export async function createPaymentIntent(
  */
 export async function releasePayment(paymentId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -155,7 +159,7 @@ export async function handleStripeWebhook(
   event: any
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = await createClient();
+    const supabase = await db();
 
     switch (event.type) {
       case "payment_intent.succeeded": {

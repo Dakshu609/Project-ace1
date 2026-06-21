@@ -1,12 +1,10 @@
 import type {
   Contract,
   Conversation,
-  FAQ,
   FreelancerProfile,
   JobPost,
   Message,
   Payment,
-  PricingPlan,
   Project,
   Proposal,
   Review,
@@ -651,84 +649,6 @@ export const testimonials: Testimonial[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rachel",
     content: "Secure payments and verified freelancers gave us confidence to scale our development team remotely.",
     rating: 5,
-  },
-];
-
-export const faqs: FAQ[] = [
-  {
-    id: "faq1",
-    question: "How does Project Ace work for clients?",
-    answer:
-      "Post a job or browse freelancers, review proposals, hire the best match, and pay securely through escrow. Funds are released only when you approve the work.",
-  },
-  {
-    id: "faq2",
-    question: "How do freelancers get paid?",
-    answer:
-      "Complete milestones, submit work for approval, and receive payment to your preferred method. We support PayPal, bank transfer, and Wise.",
-  },
-  {
-    id: "faq3",
-    question: "What fees does Project Ace charge?",
-    answer:
-      "Clients pay a 3% processing fee. Freelancers pay 10% on completed projects. Premium members enjoy reduced fees.",
-  },
-  {
-    id: "faq4",
-    question: "Are freelancers verified?",
-    answer:
-      "Yes. All freelancers pass identity verification, skill assessments, and portfolio review before appearing on the platform.",
-  },
-  {
-    id: "faq5",
-    question: "What if I'm not satisfied with the work?",
-    answer:
-      "Our dispute resolution team mediates issues. Escrow protects your payment until work meets agreed specifications.",
-  },
-];
-
-export const pricingPlans: PricingPlan[] = [
-  {
-    id: "plan1",
-    name: "Free",
-    price: 0,
-    period: "forever",
-    description: "Get started with essential features",
-    features: [
-      "Browse freelancers",
-      "Post up to 2 jobs/month",
-      "Basic messaging",
-      "Standard support",
-    ],
-  },
-  {
-    id: "plan2",
-    name: "Pro",
-    price: 29,
-    period: "month",
-    description: "For growing businesses",
-    features: [
-      "Unlimited job posts",
-      "Priority support",
-      "Advanced filters",
-      "Featured listings",
-      "5% reduced fees",
-    ],
-    popular: true,
-  },
-  {
-    id: "plan3",
-    name: "Enterprise",
-    price: 99,
-    period: "month",
-    description: "For teams at scale",
-    features: [
-      "Dedicated account manager",
-      "Custom contracts",
-      "Team collaboration",
-      "API access",
-      "SLA guarantee",
-    ],
   },
 ];
 

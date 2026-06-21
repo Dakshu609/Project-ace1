@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/database/supabase/client";
+import { createClient } from "@/lib/supabase";
 import { Button } from "@/client/components/ui/button";
 
 interface GoogleAuthButtonProps {

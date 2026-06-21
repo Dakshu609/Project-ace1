@@ -5,6 +5,7 @@ import { FreelancerCard } from "@/client/components/freelancers/freelancer-card"
 import { FilterSidebar } from "@/client/components/freelancers/filter-sidebar";
 import { PageHeader } from "@/client/components/shared/page-header";
 import { EmptyState } from "@/client/components/shared/empty-state";
+import { asString } from "@/shared/utils";
 import { getCategories, getFreelancers } from "@/server/marketplace/queries";
 
 interface PageProps {
@@ -14,10 +15,6 @@ interface PageProps {
 function asArray(value: string | string[] | undefined) {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
-}
-
-function asString(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
 }
 
 export default async function FreelancersPage({ searchParams }: PageProps) {
