@@ -1,11 +1,7 @@
 "use server";
 
-import { createClient } from "@/server/lib/supabase";
+import { db } from "@/server/lib/supabase";
 import { revalidatePath } from "next/cache";
-
-function db() {
-  return createClient() as Promise<any>;
-}
 
 const AVATAR_BUCKET = "avatars";
 const PORTFOLIO_BUCKET = "portfolio";

@@ -52,5 +52,5 @@ export async function getUserProfile() {
 }
 
 export async function db() {
-  return (await createClient()) as any;
+  return await createClient();
 }

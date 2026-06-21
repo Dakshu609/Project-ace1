@@ -18,6 +18,7 @@ import type {
   Review,
   Service,
 } from "@/shared/types";
+import type { Database } from "@/shared/types/database";
 
 const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=ProjectAce";
 
@@ -198,7 +199,7 @@ export async function getFreelancers(filters: FreelancerFilters = {}): Promise<F
 
   if (filters.category) query = query.contains("categories", [filters.category]);
   if (filters.skills?.length) query = query.contains("skills", filters.skills);
-  if (filters.availability?.length) query = query.in("availability", filters.availability);
+  if (filters.availability?.length) query = query.in("availability", filters.availability as Database["public"]["Enums"]["availability"][]);
   if (filters.minRating) query = query.gte("rating", filters.minRating);
 
   switch (filters.sort) {
@@ -496,8 +497,8 @@ export async function getAdminDashboard(): Promise<AdminDashboardData> {
   dbError("admin-pending", pendingResult.error);
   dbError("admin-projects", projectsResult.error);
   dbError("admin-events", activityResult.error);
+  const counters = (countersResult.data ?? {}) as Database["public"]["Views"]["platform_counters"]["Row"];
 
-  const counters = countersResult.data ?? {};
   return {
     counters: {
       totalUsers: toNumber(counters.total_users),

@@ -39,7 +39,7 @@ export function useRealtimeConversations(userId: string | null) {
         .or(`client_id.eq.${uid},freelancer_user_id.eq.${uid}`)
         .order("updated_at", { ascending: false });
 
-      setConversations(data || []);
+      setConversations((data || []) as ConversationRow[]);
       setLoading(false);
     }
 

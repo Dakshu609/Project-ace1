@@ -1,12 +1,8 @@
 "use server";
 
-import { createClient } from "@/server/lib/supabase";
+import { db } from "@/server/lib/supabase";
 import { sendNewMessageNotification } from "./email.service";
 import { revalidatePath } from "next/cache";
-
-function db() {
-  return createClient() as Promise<any>;
-}
 
 export interface SendMessageParams {
   conversationId: string;
@@ -81,6 +77,8 @@ export async function sendMessage(params: SendMessageParams) {
       conversation.client_id === user.id
         ? conversation.freelancer_user_id
         : conversation.client_id;
+
+    if (!recipientId) return;
 
     const { data: recipient } = await supabase
       .from("profiles")

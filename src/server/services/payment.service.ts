@@ -1,12 +1,8 @@
 "use server";
 
 import { getStripe, STRIPE_CONFIG } from "@/server/config/stripe";
-import { createClient } from "@/server/lib/supabase";
+import { db } from "@/server/lib/supabase";
 import { revalidatePath } from "next/cache";
-
-function db() {
-  return createClient() as Promise<any>;
-}
 
 export interface CreatePaymentIntentParams {
   contractId: string;

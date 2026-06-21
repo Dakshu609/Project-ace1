@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # ============================================
 # DEPENDENCIES
 # ============================================
@@ -17,15 +15,16 @@
 # ============================================
 /coverage
 /test-results
-/.playwright
+/playwright-report
+/playwright/.cache
+/cypress/videos
+/cypress/screenshots
 
 # ============================================
 # NEXT.JS BUILD OUTPUT
 # ============================================
 /.next/
 /out/
-.next
-.swc
 
 # ============================================
 # PRODUCTION BUILD
@@ -36,15 +35,20 @@
 # ============================================
 # ENVIRONMENT VARIABLES (SECRETS)
 # ============================================
-# CRITICAL: Never commit these files!
+# CRITICAL: Never commit these files — they contain secrets, API keys, tokens
 .env
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.staging
+.env.staging.local
+.env.production
 .env.production.local
 
-# Safe to commit (template only, no secrets)
-# .env.example
+# Whitelist the template file (no secrets, safe to commit)
+!.env.example
 
 # ============================================
 # DEVELOPMENT & DEBUG
@@ -63,6 +67,8 @@ lerna-debug.log*
 .AppleDouble
 .LSOverride
 ._*
+.Spotlight-V100
+.Trashes
 
 # Windows
 Thumbs.db
@@ -71,6 +77,7 @@ ehthumbs.db
 ehthumbs_vista.db
 desktop.ini
 $RECYCLE.BIN/
+*.lnk
 
 # Linux
 *~
@@ -80,7 +87,7 @@ $RECYCLE.BIN/
 # ============================================
 # IDE & EDITOR FILES
 # ============================================
-# VS Code
+# VS Code (whitelist shared config)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -88,18 +95,24 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 *.code-workspace
 
-# JetBrains (WebStorm, IntelliJ)
+# JetBrains (WebStorm, IntelliJ, GoLand)
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# Vim
+# Vim / Neovim
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+*.swp
+*.swo
+*.swn
+
+# Sublime Text
+*.sublime-workspace
 
 # ============================================
 # TYPESCRIPT
@@ -115,23 +128,70 @@ next-env.d.ts
 .firebase
 
 # ============================================
-# MISC
+# CACHES, TEMPORARY FILES & LOCAL STATE
 # ============================================
-*.pem
+*.cache
+.eslintcache
+.stylelintcache
+.turbo/
+
+# ============================================
+# LOGS
+# ============================================
 *.log
-*.lock
-.cache
 
-# Temporary files
-*.tmp
-*.temp
-*~
-
-# Database files (if local)
+# ============================================
+# DATABASE
+# ============================================
+# Local database files (do not commit development databases)
 *.db
 *.sqlite
 *.sqlite3
 
-# Backup files
+# ============================================
+# SUPABASE LOCAL DEVELOPMENT
+# ============================================
+supabase/.temp
+.branches_*
+
+# ============================================
+# FILE UPLOADS & USER CONTENT
+# ============================================
+/public/uploads/
+/uploads/
+/storage/
+
+# ============================================
+# STRIPE CLI
+# ============================================
+.stripe/
+
+# ============================================
+# SECRETS & CERTIFICATES
+# ============================================
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# ============================================
+# BACKUP FILES
+# ============================================
 *.bak
 *.backup
+
+# ============================================
+# TEMPORARY FILES
+# ============================================
+*.tmp
+*.temp
+
+# ============================================
+# PACKAGE LOCK (ignore alien lock files, keep npm's)
+# ============================================
+yarn.lock
+pnpm-lock.yaml
+bun.lock
+bun.lockb
+# package-lock.json is intentionally committed
