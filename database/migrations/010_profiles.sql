@@ -21,6 +21,22 @@ comment on table  public.profiles is 'Extends auth.users with marketplace profil
 comment on column public.profiles.role is 'User role: client, freelancer, or admin';
 
 -- --------------------------------------------------------------------------
+-- Admin check function (needs profiles table to exist)
+-- --------------------------------------------------------------------------
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  );
+$$;
+
+-- --------------------------------------------------------------------------
 -- Trigger: auto-create profile on auth.users insert
 -- --------------------------------------------------------------------------
 drop trigger if exists on_auth_user_created on auth.users;

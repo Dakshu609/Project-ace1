@@ -21,22 +21,6 @@ end;
 $$;
 
 -- ============================================================================
--- Admin check function (security definer for RLS policies)
--- ============================================================================
-create or replace function public.is_admin()
-returns boolean
-language sql
-security definer
-set search_path = public
-stable
-as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and role = 'admin'
-  );
-$$;
-
--- ============================================================================
 -- New user handler — auto-creates profile row on signup
 -- ============================================================================
 create or replace function public.handle_new_user()
